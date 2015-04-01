@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<meta charset="utf-8"/>
+<title>nemo.js By
+    Nilesh Kulkarni @nileshdk (made with impress.js presentation tool by
+    Bartek Szopka @bartaz)</title>
+<meta name="description" content="nemo with cucumberjs">
+<meta name="author" content="Nilesh Kulkarni"/>
+
+<link rel="stylesheet" href="css/font.css"/>
+<link rel="stylesheet" href="css/default.css"/>
+<link rel="stylesheet" href="highlight/styles/sunburst.css">
+
+<div id="impress" class="impress-not-supported">
+    <div id="fm1" class="fallback-message hidden">
+        <p>Your browser <b>doesn't support the features required</b> by impress.js,
+            so you are presented with a simplified version of this presentation.</p>
+
+        <p>For the best experience please use the latest <b>Chrome</b> or
+            <b>Safari</b> browser. Firefox 10 (to be released soon)
+            will also handle it.</p>
+    </div>
+    <div id="fm2" class="fallback-message">
+        <p>If you have fast machine and recent Google Chrome or Safari installed,
+            please check <a href="3d/index.html">a bit more "moving" version of that presentation</a></p>
+
+        <p style="text-align:center"><big>Otherwise, scroll down to see the slides</big></p>
+    </div>
+
+    <div id="start" class="step">
+        <h1>Introducing <strong>nemo</strong>js</h1>
+            <center>
+                <img src="nemo.png" style="height: 300px;width: 300px;"/>
+            </center>
+        <p class="footer">
+            <span>Nilesh Kulkarni (@nileshdk)</span><br/>
+            <span>March 2015</span>
+        </p>
+    </div>
+    <div id="aboutme" class="step">
+        <h3>About me</h3>
+
+        <p><strong>developer, automated tester</strong> at PayPal</p>
+
+        <p>based in <strong>Boston, MA</strong></p>
+
+        <p>contributor on <strong>nemo</strong> project</p>
+
+        <h4>love <strong>open source</strong> <h6>(contributed to grunt-cucumberjs, browsermob-node, few nemo plugins)</h6></h4>
+    </div>
+
+    <div id="talk" class="step" style="line-height: 100%">
+        <h1>Agenda</h1><br/>
+        <ul>
+            <li> <p><strong>nemo</strong> and it's philosophy
+            </p></li>
+            <li><p>what is nemo and why its required?</p></li>
+            <li><p>nemo's <strong>plugin architecture</strong></p></li>
+            <li><p>walk through some examples</p></li>
+            <li><p>nemo yeoman generator</p></li>
+        </ul>
+    </div>
+    <div class="step" id="max">
+        <center>
+            <img src="max.jpeg">
+        </center>
+    </div>
+    <div id="history" class="step" >
+        <h3>Background</h3>
+        <ul>
+            <li><p>Node.js is growing at PayPal, checkout <strong>kraken</strong>js</p></li>
+            <li><p>Matt Edelman of PayPal developed nemo</p></li>
+            <li><p>nemo- <strong>NE</strong>ed <strong>MO</strong>re automation</p></li>
+        </ul>
+    </div>
+
+    <div id="stmt" class="step">
+        <h1>WebDriver</h1>
+        <ul>
+            <li><p>WebDriver is meant to simulate user interactions </p></li>
+            <li><p>WebDriver is NOT meant to:</p></li>
+            <ul style="padding-left: 100px">
+                <li><p>Manage your element locators</p></li>
+                <li><p>Manage your test configuration</p></li>
+                <li><p>Running your tests locally/remotely</p></li>
+            </ul>
+            <li><p>Hooking up WebDriver with test framework, not enough!</p></li>
+        </ul>
+    </div>
+    <div id="whynemo" class="step">
+        <h2 style="color: #CC0066">More challenges</h2>
+        <ul>
+      <li><p>too many browser/os to support <p/></li>
+      <li><p>constantly evolving browsers and apps <p/></li>
+      <li> <p>AJAX heavy apps<p/></li>
+      <li><p>multiple locales to support</p></li>
+      <!--<li><p>more maintenance = less ROI<p/></li>-->
+      <!--<li><p>flexible, scalable & maintainable solution required</p></li>-->
+        </ul>
+
+    </div>
+
+    <div id="selenium" class="step" style="font-size: 80%">
+        <h3 style="color: #CC0066">typical WebDriverJS code</h3>
+        <pre >
+      <code>
+  var wd = require('selenium-webdriver'),
+  SeleniumServer = require('selenium-webdriver/remote').SeleniumServer,
+  server = new SeleniumServer('/usr/local/bin/selenium-server-standalone.jar'
+          , { port: 4444 });
+  server.start();
+  var driver = new wd.Builder().usingServer(server.address()).
+  withCapabilities(wd.Capabilities.chrome()).
+  build();
+  driver.get('https://edit.europe.yahoo.com/registration');
+  driver.findElement(wd.By.name('firstname')).sendKeys('Nilesh');
+  driver.findElement(wd.By.name('secondname')).sendKeys('Kulkarni');
+  driver.findElement(wd.By.css('#month>option[title=\'November\']')).click();
+  driver.findElement(wd.By.css('#day>option[value=\'16\']')).click();
+  driver.findElement(wd.By.css('#year>option[value=\'1980\']')).click();
+  driver.findElement(wd.By.id('male')).click();
+  driver.quit();
+      </code>
+    </pre>
+    </div>
+
+    <div id="letsgo" class="step">
+        <h2>Let's go right in <strong>nemo</strong>js</h2>
+    </div>
+
+    <div id="whatisit" class="step">
+        <h2 style="color: #CC0066">what is nemo?</h2>
+        <ul>
+            <li><p>abstraction layer on top of WebDriverJS</p></li>
+            <li><p>scalable plugin architecture</p></li>
+            <li><p>agnostic to framework</p></li>
+            <li><p>manages test configuration</p></li>
+            <li><p>yeoman generator for initial file creation</p></li>
+            <!--provides logical structure to test assets-->
+        </ul>
+    </div>
+
+    <div id="letsgo1" class="step">
+        <h1>nemo is a super light framework</h1>
+        <p>no. of lines in README > no. of lines in actual code</p>
+    </div>
+
+    <div id="basic" class="step">
+        <h2>Basic Usage</h2>
+    <pre><code style="font-size: 85%">
+var nemo = Nemo({
+    "driver" : {
+        "browser": "firefox"
+    },
+    "data" : {
+     "baseUrl" : "https://www.paypal.com"
+    }
+}, function (err) {
+    //always check for errors!
+    if (err) {
+     console.log('Error during Nemo setup', err);
+    }
+    nemo.driver.get(nemo.data.baseUrl);
+    nemo.driver.getCapabilities().
+    then(function (caps) {
+      console.info("Nemo is successful",caps.caps_.browserName);
+    });
+    nemo.driver.quit();
+});
+    </code></pre>
+    </div>
+
+    <div class = "step" id="basic2">
+        <br/> <br/>
+        <span style="font-size: 70%">testDirectory/config/config.json</span>
+        <pre>
+            <code style="font-size: 75%">
+                {
+                    "driver" : {
+                        "browser": "firefox"
+                    },
+                    "data" : {
+                        "baseUrl" : "https://www.paypal.com"
+                    }
+                }
+            </code>
+        </pre>
+        <span style="font-size: 70%;padding-top: -10px">pass in __dirname; parent directory of /config</span>
+         <pre><code style="font-size: 85%">
+             var nemo = Nemo(__dirname, function (err) {
+                 //always check for errors!
+                 if (err) {
+                     console.log('Error during Nemo setup', err);
+                 }
+                 nemo.driver.get(nemo.data.baseUrl);
+                 nemo.driver.quit();
+             });
+             </code>
+             </pre>
+    </div>
+
+    <div id="letsp" class="step">
+        <h1>plugins</h1>
+        <li><p>bread and butter of nemo</p></li>
+        <li><p>nemo plugins make your code DRY and maintainable</p></li>
+        <li><p>many plugins with different purposes available</p></li>
+        <li><p>you register only the ones you want</p></li>
+    </div>
+
+    <div id="pluginarch" class="step">
+    <pre>
+      <code>
+      {
+              "plugins": {
+                 "samplePlugin": {
+                    "module": "path:plugin/sample-plugin",
+                    "arguments: [...]
+                    "priority": 99
+                 },
+                 "view": {
+                     "module": "nemo-view"
+                     "arguments": ["path:locator"]
+                 }
+              },
+              "driver": {
+                 "browser": "config:BROWSER"
+              },
+              "data": {
+                 "baseUrl" : "https://www.paypal.com"
+              },
+              "BROWSER" : "firefox"
+      }
+      </code>
+    </pre>
+    </div>
+
+
+
+    <div id="basicplugin1" class="step">
+        <h1>nemo-view</h1>
+        <div class="substep">
+            <p>testDirectory/locator/login.json</p>
+      <pre><code>
+          {
+              "email": {
+                  "locator" : "login_email",
+                  "type" : "id"
+              },
+              "submit" : {
+                  "locator" : "submit.x",
+                  "type" : "name"
+              }
+          }
+      </code></pre>
+        </div>
+    </div>
+    <div class="step" id="structure">
+        <div class="substep">
+            <pre>
+                <code>
+            testBaseDir
+                    |- locator
+                        |- form.json
+                        |- formElementList.json
+                        |- select.json
+                        |- simple.json
+                        |- sub
+                            |- form.json
+                </code>
+            </pre>
+        </div>
+        <div class="substep">
+            <pre>
+                <code>
+                    nemo.view.form
+                    nemo.view.formElementList
+                    nemo.view.select
+                    nemo.view.simple
+                    nemo.view.sub.form
+                </code>
+            </pre>
+        </div>
+    </div>
+    <div id="viewUsage" class="step">
+        <h1>nemo-view</h1>
+        <div class="substep" style="font-size: 80%">
+            <p>testDirectory/locator/login.json</p>
+      <pre><code>
+          {
+              "email": {
+                  "locator" : "login_email",
+                  "type" : "id"
+              },
+              "submit" : {
+                  "locator" : "submit.x",
+                  "type" : "name"
+              }
+          }
+      </code></pre>
+
+        </div>
+
+        <div class="substep" style="font-size: 80%">
+        <p style="margin-top:0.9em">once nemo-view plugin is registered, you could write something like</p>
+        <pre><code>
+        var login = nemo.view.login;
+        login.emailWait(); //nice helper methods
+        login.email().sendKeys('user@paypal.com');
+        login.submit().click();
+        </code></pre>
+        </div>
+    </div>
+        <div id="withoutlocator" class="step">
+            <h3>nemo-view without locator JSON files</h3>
+    <pre>
+        <code>
+            nemo.view._find
+            nemo.view._finds
+            nemo.view._present
+            nemo.view._visible
+            nemo.view._wait
+            nemo.view._waitVisible
+        </code>
+    </pre>
+    <pre>
+        <code>
+        nemo.view._waitVisible('#email');
+        nemo.view._find('id:email').sendKeys('me@mine.com');
+        nemo.view._find('#password').sendKeys('11111111');
+        </code>
+    </pre>
+    </div>
+    <div id="which" class="step" style="font-size: 75%">
+        <div class="substep">
+            <h5>direct selenium-webdriver</h5>
+            <pre>
+                <code>
+  driver.wait(function(){
+     return driver.findElement(wd.By.name('firstname'));
+  },5000,'Cannot find firstname element');
+  driver.findElement(wd.By.name('firstname')).sendKeys('Nilesh');
+  driver.findElement(wd.By.name('secondname')).sendKeys('Kulkarni');
+  driver.findElement(wd.By.css('#month>option[title=\'November\']')).click();
+  driver.findElement(wd.By.css('#day>option[value=\'16\']')).click();
+  driver.findElement(wd.By.css('#year>option[value=\'1980\']')).click();
+                </code>
+            </pre>
+        </div>
+        <div class="substep">
+            <h5>with nemo-view plugin</h5>
+            <pre>
+                <code>
+  loginView.firstNameWait(5000,'Cannot find firstname element');
+  loginView.firstName().sendKeys('Nilesh');
+  loginView.secondName().sendKeys('Kulkarni');
+  loginView.monthOptionText('November');
+  loginView.dayOptionValue('16');
+  loginView.yearOptionValue('1980');
+                </code>
+            </pre>
+        </div>
+   </pre>
+    </div>
+
+    <div id="nemo-demo" class="step">
+        <h1>Alright, Demo Time!</h1>
+    </div>
+
+    <div class="step" id="contributors">
+        <h1>We need contributors!</h1>
+        <center>
+            <img src="stats.png"/>
+        </center>
+    </div>
+
+
+    <div id="questions" class="step">
+        <h2>Questions ?</h2>
+    </div>
+
+    <div id="thank-you" class="step final">
+        <h2>Thank you !</h2>
+
+        <p class="name">Nilesh Kulkarni</p>
+
+        <p class="email"><a href="mailto:nikulkarni@paypal.com">nikulkarni@paypal.com</a></p>
+
+        <p class="twitter p-a"><a href="https://twitter.com/nileshdk"><img src="twitter.png"/> @nileshdk</a></p>
+
+        <p class="github p-a"><a href="https://github.com/paypal/nemo"><img src="github.png"/> github.com/paypal/nemo</a></p>
+
+    </div>
+
+
+    <div id="overview" class="step" data-x="3400" data-y="2000" data-scale="10"></div>
+    <div class="hint"><p>Use a spacebar or arrow keys to navigate</p></div>
+</div>
+
+<div id="timer"></div>
+
+<script src="highlight/highlight.pack.js"></script>
+<script src="js/impress.js"></script>
+<script src="js/default.js"></script>
+</body>
+</html>

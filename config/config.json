@@ -1,0 +1,9 @@
+{
+  "driver": {
+    "browser": "config:BROWSER"
+  },
+  "data": {
+    "baseUrl": "http://www.paypal.com"
+  },
+  "BROWSER" : "firefox"
+}

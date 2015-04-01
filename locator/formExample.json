@@ -1,0 +1,14 @@
+{
+	"citySelect": {
+		"locator": "select[name='ddlTown']",
+		"type": "css"
+	},
+	"blueCheckbox": {
+		"locator": "chk2_2",
+		"type": "id"
+	},
+	"lifeStoryText": {
+		"locator": "txtLifeStory",
+		"type": "id"
+	}
+}
